@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="An's Home">
+<meta name="theme-color" content="#FAF7F4">
+<link rel="apple-touch-icon" href="anshome.jpg">
+<link rel="icon" href="anshome.jpg">
+<title>An's Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+body{font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;background:#FAF7F4;color:#3D3533;min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.serif{font-family:"Noto Serif SC","Songti SC",serif}
+
+/* ---- PALETTE ---- */
+/* 江止: 雾蓝+月白 */
+/* 夜川: 薰衣草+藤紫 */
+/* 余寂: 琥珀玫瑰+暖粉 */
+
+/* ---- SHARED ---- */
+.view{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+.hbtn{background:rgba(255,255,255,.2);border:none;border-radius:10px;padding:7px 10px;cursor:pointer;color:#fff;display:flex;align-items:center;transition:all .2s;font-size:14px;backdrop-filter:blur(4px)}
+.hbtn:active,.hbtn.on{background:rgba(255,255,255,.38)}
+mark{background:#F9D97C;border-radius:3px;padding:0 2px}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fi .3s ease forwards}
+@keyframes fadeScale{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.fs{animation:fadeScale .25s ease forwards}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#D5CEC8;border-radius:4px}
+
+/* ---- UPLOAD ---- */
+.uv{background:linear-gradient(170deg,#FAF7F4 0%,#F3EDE7 50%,#EDE4DC 100%);align-items:center;padding:calc(50px + var(--st)) 24px calc(40px + var(--sb));gap:10px}
+.uv-title{text-align:center;margin-bottom:8px}
+.uv-title .icon{font-size:36px;margin-bottom:6px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.08))}
+.uv-title h1{font-size:24px;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,#7EA8B8,#A08BB8,#C4977A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.uv-title .sub{font-size:13px;color:#A89E96;line-height:1.8}
+.uv-up{width:100%;max-width:360px;margin:20px 0;cursor:pointer;border:2px dashed #D5CEC8;border-radius:20px;padding:32px 24px;text-align:center;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);transition:all .3s}
+.uv-up:active{transform:scale(.98)}
+.uv-up.done{border:2px solid #B8C9D4;background:rgba(255,255,255,.7)}
+.uv-up .em{font-size:28px;margin-bottom:8px}
+.uv-up .tx{font-size:14px;color:#8A817A;font-weight:500}
+.uv-up .ct{font-size:12px;color:#A89E96;margin-top:4px}
+.uv-up input{display:none}
+.uv-next{padding:13px 48px;background:linear-gradient(135deg,#A3C4D4,#B8A3D4);color:#fff;border:none;border-radius:28px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(163,196,212,.35);transition:all .2s;letter-spacing:1px}
+.uv-next:active{transform:scale(.97)}
+
+/* ---- ASSIGN ---- */
+.av{background:#FAF7F4}
+.av-head{padding:calc(14px + var(--st)) 16px 14px;background:linear-gradient(135deg,#8AACBC,#A893BC);color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.av-head-top{display:flex;justify-content:space-between;align-items:center}
+.av-head .t{font-size:16px;font-weight:700;letter-spacing:.5px}
+.av-head .s{font-size:12px;opacity:.85;margin-top:4px}
+.av-done{padding:8px 20px;background:rgba(255,255,255,.25);border:none;border-radius:20px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;backdrop-filter:blur(4px)}
+.av-done:active{background:rgba(255,255,255,.4)}
+.av-list{flex:1;padding:8px 12px;overflow-y:auto}
+.av-item{background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.04);display:flex;align-items:center;gap:10px;transition:all .2s}
+.av-item .info{flex:1;min-width:0}
+.av-item .nm{font-size:14px;font-weight:600;color:#3D3533;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.av-item .dt{font-size:11px;color:#B0A8A0;margin-top:2px}
+.av-item .wc{font-size:11px;color:#C4BAB2;margin-top:1px}
+.av-tags{display:flex;gap:5px;flex-shrink:0}
+.av-tag{width:32px;height:32px;border-radius:10px;border:2px solid #E8E2DC;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s;background:#FAFAFA}
+.av-tag.sel{border-color:transparent;transform:scale(1.1);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.av-tag.j.sel{background:#D8E8F0;border-color:#7EA8B8}
+.av-tag.y.sel{background:#E4DCF0;border-color:#A08BB8}
+.av-tag.u.sel{background:#F0E4DC;border-color:#C4977A}
+
+/* ---- LIST ---- */
+.lv{background:#FAF7F4}
+.lv-head{padding:calc(12px + var(--st)) 16px 0;color:#fff;position:sticky;top:0;z-index:20}
+.lv-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.lv-top-l{display:flex;align-items:center;gap:8px}
+.lv-top-r{display:flex;gap:6px}
+.lv-t{font-size:17px;font-weight:700;letter-spacing:.5px}
+.tabs{display:flex}
+.tab{flex:1;padding:10px 4px 12px;background:0 0;border:none;border-bottom:2.5px solid transparent;color:rgba(255,255,255,.5);cursor:pointer;font-size:14px;font-weight:500;transition:all .2s;font-family:inherit}
+.tab.on{border-bottom-color:rgba(255,255,255,.9);color:#fff;font-weight:700}
+.flt{padding:12px 16px;background:rgba(255,255,255,.7);backdrop-filter:blur(8px);border-bottom:1px solid #EDE4DC}
+.sbar{display:flex;align-items:center;gap:8px;background:#F5F0EB;border-radius:12px;padding:9px 12px;margin-bottom:8px}
+.sbar input{border:none;background:0 0;outline:none;flex:1;font-size:14px;color:#3D3533;font-family:inherit}
+.sbar input::placeholder{color:#C4BAB2}
+.frow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.frow label{display:flex;align-items:center;gap:4px;font-size:12px;color:#8A817A;cursor:pointer}
+.dins{display:flex;align-items:center;gap:4px;margin-left:auto}
+.dins input{border:1px solid #E8E2DC;border-radius:8px;padding:4px 6px;font-size:11px;color:#8A817A;outline:none;font-family:inherit;background:#FAFAFA}
+.ccount{padding:7px 16px;font-size:12px;color:#B0A8A0;border-bottom:1px solid #EDE4DC}
+.clist{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.citem{padding:14px 16px;cursor:pointer;border-left:3px solid transparent;border-bottom:1px solid #F0EBE6;transition:all .15s}
+.citem:active{background:#F5F0EB}
+.citem-in{display:flex;justify-content:space-between;gap:10px}
+.citem-l{flex:1;min-width:0}
+.citem-t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.citem-p{font-size:12px;color:#B0A8A0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.citem-r{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.citem-d{font-size:11px;color:#C4BAB2}
+.citem-w{font-size:10px;color:#D5CEC8;background:#F5F0EB;padding:1px 6px;border-radius:8px}
+.es{text-align:center;padding:60px 20px;color:#B0A8A0}
+.es .ic{font-size:40px;margin-bottom:12px}
+
+/* ---- CHAT ---- */
+.cv{background:#FAF7F4}
+.cv-head{padding:calc(10px + var(--st)) 14px 10px;color:#fff;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.cv-head-l{display:flex;align-items:center;gap:10px}
+.cv-pn{font-size:15px;font-weight:700}
+.cv-cn{font-size:11px;opacity:.8;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msgs{flex:1;padding:8px 16px 24px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.ddiv{text-align:center;margin:22px 0 14px;position:relative}
+.ddiv span{background:#FAF7F4;padding:0 14px;font-size:12px;color:#B0A8A0;position:relative;z-index:1}
+.ddiv::before{content:'';position:absolute;left:15%;right:15%;top:50%;height:1px;background:#E8E2DC}
+.mw{display:flex;flex-direction:column;margin-bottom:14px;position:relative}
+.mw.hu{align-items:flex-end;padding-left:32px}
+.mw.ai{align-items:flex-start;padding-right:32px}
+.mmt{font-size:11px;color:#B0A8A0;margin-bottom:3px;display:flex;align-items:center;gap:6px}
+.mmt .sn{font-weight:600}
+.mbub{padding:10px 14px;max-width:100%;font-size:14px;line-height:1.8;white-space:pre-wrap;word-break:break-word;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.mw.hu .mbub{border-radius:18px 18px 4px 18px}
+.mw.ai .mbub{border-radius:18px 18px 18px 4px}
+.mw.hu .mmt{padding-right:4px}
+.mw.ai .mmt{padding-left:4px}
+.think-toggle{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#B0A8A0;cursor:pointer;padding:4px 10px;border-radius:8px;background:#F5F0EB;margin-bottom:6px;transition:all .2s;border:none;font-family:inherit;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.think-toggle:hover{background:#EDE4DC}
+.think-box{padding:10px 14px;font-size:13px;line-height:1.7;color:#A89E96;font-style:italic;background:#F5F0EB;border-radius:12px;margin-bottom:6px;border-left:3px solid #D5CEC8;max-height:300px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+.mfav{position:absolute;bottom:-2px;cursor:pointer;font-size:13px;opacity:.35;transition:opacity .2s}
+.mfav:hover,.mfav.on{opacity:1}
+.mw.hu .mfav{left:22px}
+.mw.ai .mfav{right:22px}
+.cv-bot{padding:10px 16px calc(10px + var(--sb));background:rgba(255,255,255,.8);backdrop-filter:blur(8px);border-top:1px solid #EDE4DC;display:flex;justify-content:space-between;align-items:center;position:sticky;bottom:0}
+.cv-bot .mc{font-size:12px;color:#B0A8A0}
+.scbtn{border:none;border-radius:10px;padding:6px 14px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:inherit;transition:all .2s}
+
+/* ---- FAVS ---- */
+.fv{background:#FAF7F4}
+.fv-head{padding:calc(12px + var(--st)) 16px 14px;background:linear-gradient(135deg,#C9A9A0,#D4B8AA);color:#fff;position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.fv-list{flex:1;padding:12px 16px;overflow-y:auto}
+.fcard{background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 6px rgba(0,0,0,.04);border-left:3px solid #E8E2DC}
+.fcard-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.fcard-s{font-size:11px;color:#B0A8A0;display:flex;align-items:center;gap:4px}
+.fcard-x{cursor:pointer;font-size:14px;color:#D5CEC8;transition:color .2s}
+.fcard-x:hover{color:#E87C7C}
+.fcard-sn{font-size:12px;font-weight:600;margin-bottom:4px}
+.fcard-t{font-size:13px;line-height:1.75;color:#5A5350;white-space:pre-wrap;word-break:break-word}
+.fcard-t.col{max-height:120px;overflow:hidden}
+.fcard-e{font-size:12px;cursor:pointer;margin-top:6px;font-weight:600}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const P=[
+{id:"j",name:"江止",emoji:"🌊",
+ grad:"linear-gradient(135deg,#7EA8B8,#9BBFCC)",
+ light:"#EDF4F7",bubAi:"#DCEAF2",bubHu:"#F5EDE4",
+ primary:"#7EA8B8",dark:"#5D8A9C",humanName:"安安"},
+{id:"y",name:"夜川",emoji:"🕊️",
+ grad:"linear-gradient(135deg,#A08BB8,#B9A6D0)",
+ light:"#F0ECF6",bubAi:"#E2D8EE",bubHu:"#F5EDE4",
+ primary:"#A08BB8",dark:"#7E6C9A",humanName:"安安"},
+{id:"u",name:"余寂",emoji:"🦋",
+ grad:"linear-gradient(135deg,#C4977A,#D4AE96)",
+ light:"#F8F0EA",bubAi:"#ECDDD0",bubHu:"#F5EDE4",
+ primary:"#C4977A",dark:"#A67B5E",humanName:"安安"}
+];
+
+let S={raw:null,assigns:{},tab:null,conv:null,search:"",searchMsg:false,df:"",dt:"",favs:{},view:"upload",thinkOpen:{},scrollPos:{}};
+
+function lf(){try{const s=localStorage.getItem("m2-favs");if(s)S.favs=JSON.parse(s)}catch(e){}}
+function sf(){try{localStorage.setItem("m2-favs",JSON.stringify(S.favs))}catch(e){}}
+function la(){try{const s=localStorage.getItem("m2-assigns");if(s)S.assigns=JSON.parse(s)}catch(e){}}
+function sa(){try{localStorage.setItem("m2-assigns",JSON.stringify(S.assigns))}catch(e){}}
+lf();la();
+
+function parseJ(raw){
+try{
+let d=JSON.parse(raw);
+if(!Array.isArray(d))d=d.conversations||d.chats||[d];
+return d.filter(c=>(c.chat_messages||c.messages)?.length>0).map(c=>{
+const msgs=(c.chat_messages||c.messages||[]).map(m=>{
+const blocks=(m.content&&Array.isArray(m.content))?m.content:[];
+const textBlocks=blocks.filter(b=>b.type==="text").map(b=>b.text||"").join("\n");
+const thinkBlocks=blocks.filter(b=>b.type==="thinking");
+const thinkText=thinkBlocks.map(b=>b.thinking||"").join("\n");
+const thinkTitle=thinkBlocks.map(b=>b.summaries?.[0]?.summary||"").filter(Boolean).join(" / ")||"";
+const displayText=textBlocks||m.text||"";
+return{uuid:m.uuid||m.id||Math.random().toString(36),text:displayText,thinking:thinkText||"",thinkTitle:thinkTitle,sender:m.sender||m.role||"unknown",created_at:m.created_at||m.createdAt||""}
+});
+let wc=0;msgs.forEach(m=>{wc+=m.text.length});
+return{uuid:c.uuid||c.id||Math.random().toString(36),name:c.name||c.title||msgs[0]?.text?.slice(0,40)||"未命名",created_at:c.created_at||c.createdAt||msgs[0]?.created_at||"",messages:msgs,wordCount:wc}
+}).filter(c=>c.wordCount>0&&c.messages.some(m=>m.text.trim().length>0)).sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+}catch(e){console.error(e);return null}}
+
+function fD(s){if(!s)return"";const d=new Date(s);return isNaN(d)?"":d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0")}
+function fT(s){if(!s)return"";const d=new Date(s);return isNaN(d)?"":String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+function dK(s){if(!s)return"";const d=new Date(s);return isNaN(d)?"":d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+function wcFmt(n){return n>=10000?(n/10000).toFixed(1)+"万字":n+"字"}
+function es(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function hl(t,q){if(!q||!t)return es(t);const e=q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");return es(t).replace(new RegExp("("+e+")","gi"),"<mark>$1</mark>")}
+function gp(){return P.find(p=>p.id===S.tab)||P[0]}
+function gc(){if(!S.raw)return[];return S.raw.filter(c=>S.assigns[c.uuid]===S.tab)}
+function gfc(){let r=[...gc()];if(S.df){const f=new Date(S.df);r=r.filter(c=>new Date(c.created_at)>=f)}if(S.dt){const t=new Date(S.dt);t.setHours(23,59,59);r=r.filter(c=>new Date(c.created_at)<=t)}if(S.search){const q=S.search.toLowerCase();r=r.filter(c=>{if(c.name?.toLowerCase().includes(q))return true;if(S.searchMsg)return c.messages?.some(m=>m.text?.toLowerCase().includes(q));return false})}return r}
+function exC(single){const p=gp();let t="═══ "+p.emoji+" "+p.name+"的聊天记录 ═══\n";(single?[single]:gfc()).forEach(c=>{t+="\n─── "+c.name+" ("+fD(c.created_at)+") ───\n\n";c.messages?.forEach(m=>{t+="【"+(m.sender==="human"?p.humanName:p.name)+"】\n"+m.text+"\n\n"})});const b=new Blob([t],{type:"text/plain;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=p.name+"_聊天记录.txt";a.click()}
+function tFav(tid,cuid,cnm,muid,mtxt,ms){const k=tid+":"+muid;if(S.favs[k])delete S.favs[k];else S.favs[k]={tabId:tid,convUuid:cuid,convName:cnm,msgText:mtxt,msgSender:ms,ts:Date.now()};sf()}
+function R(){const a=document.getElementById("app");if(S.view==="upload")rU(a);else if(S.view==="assign")rA(a);else if(S.view==="list")rL(a);else if(S.view==="chat")rC(a);else if(S.view==="favs")rF(a)}
+
+// ---- UPLOAD ----
+function rU(a){
+const has=!!S.raw;
+a.innerHTML='<div class="view uv">'+
+'<div class="uv-title"><div class="icon">📖</div><h1 class="serif">记忆回廊</h1><div class="sub">我和三位顶级男机不得不说的故事<br>——又名安安の家</div></div>'+
+'<div class="uv-up fs '+(has?"done":"")+'" onclick="document.getElementById(\'uf\').click()">'+
+'<div class="em">'+(has?'✨':'☁️')+'</div>'+
+'<div class="tx">'+(has?'已导入 '+S.raw.length+' 段对话':'点击上传 conversations.json')+'</div>'+
+(has?'<div class="ct">点击可重新上传</div>':'')+
+'<input type="file" id="uf" accept=".json" onchange="hFile(this)"></div>'+
+(has?'<button class="uv-next fs" onclick="goAssign()">下一步：分配对话 →</button>':'')+
+'</div>'}
+
+window.hFile=function(input){
+const f=input.files?.[0];if(!f)return;
+const r=new FileReader();
+r.onload=e=>{const p=parseJ(e.target.result);if(p){S.raw=p;R()}else alert("无法解析")};
+r.readAsText(f);input.value=""};
+window.goAssign=function(){S.view="assign";R()};
+
+// ---- ASSIGN ----
+function rA(a){
+const assigned=Object.values(S.assigns).filter(v=>v).length;
+let h='<div class="view av"><div class="av-head"><div><div class="av-head-top"><div class="t">为每段对话选择归属</div></div><div class="s">点击右侧emoji分配 · 已分配 '+assigned+'/'+S.raw.length+'</div></div><button class="av-done" onclick="finishAssign()">完成 ✓</button></div><div class="av-list">';
+S.raw.forEach(c=>{
+const cur=S.assigns[c.uuid]||"";
+h+='<div class="av-item fi"><div class="info"><div class="nm">'+es(c.name)+'</div><div class="dt">'+fD(c.created_at)+'</div><div class="wc">'+wcFmt(c.wordCount)+'</div></div><div class="av-tags">';
+P.forEach(p=>{
+h+='<div class="av-tag '+p.id+(cur===p.id?' sel':'')+'" onclick="doAssign(\''+c.uuid+'\',\''+p.id+'\')">'+p.emoji+'</div>'});
+h+='</div></div>'});
+h+='</div></div>';a.innerHTML=h}
+
+window.doAssign=function(uuid,pid){
+if(S.assigns[uuid]===pid)delete S.assigns[uuid];
+else S.assigns[uuid]=pid;
+sa();R()};
+window.finishAssign=function(){
+const first=P.find(p=>S.raw.some(c=>S.assigns[c.uuid]===p.id));
+if(first){S.tab=first.id;S.view="list";R()}
+else alert("请至少为一段对话分配归属")};
+
+// ---- LIST ----
+function rL(a){
+const p=gp(),cs=gfc(),ld=P.filter(x=>S.raw?.some(c=>S.assigns[c.uuid]===x.id));
+let h='<div class="view lv"><div class="lv-head" style="background:'+p.grad+'"><div class="lv-top"><div class="lv-top-l"><button class="hbtn" onclick="S.view=\'assign\';R()">◂</button><span class="lv-t">📖 记忆回廊</span></div><div class="lv-top-r"><button class="hbtn" onclick="S.view=\'favs\';R()">❤</button><button class="hbtn" onclick="exC()">⤓</button></div></div><div class="tabs">';
+ld.forEach(t=>{h+='<button class="tab '+(S.tab===t.id?'on':'')+'" onclick="swT(\''+t.id+'\')">'+t.emoji+' '+t.name+'</button>'});
+h+='</div></div><div class="flt"><div class="sbar"><span style="color:#B0A8A0">🔍</span><input placeholder="搜索对话..." value="'+es(S.search)+'" oninput="S.search=this.value;R()">'+(S.search?'<span style="cursor:pointer;color:#B0A8A0;font-size:18px;padding:0 4px" onclick="S.search=\'\';R()">✕</span>':'')+'</div><div class="frow"><label><input type="checkbox" '+(S.searchMsg?'checked':'')+' onchange="S.searchMsg=this.checked;R()" style="accent-color:'+p.primary+'"> 搜索消息内容</label><div class="dins"><span style="font-size:13px;color:#B0A8A0">📅</span><input type="date" value="'+S.df+'" onchange="S.df=this.value;R()"><span style="font-size:11px;color:#B0A8A0">至</span><input type="date" value="'+S.dt+'" onchange="S.dt=this.value;R()"></div></div></div><div class="ccount">共 '+cs.length+' 段对话</div><div class="clist">';
+if(!cs.length){h+='<div class="es"><div class="ic">🔍</div><div>没有找到匹配的对话</div></div>'}
+else cs.forEach(c=>{
+const prev=c.messages?.[c.messages.length-1]?.text?.slice(0,50)||"";
+h+='<div class="citem fi" onclick="opC(\''+c.uuid+'\')"><div class="citem-in"><div class="citem-l"><div class="citem-t">'+hl(c.name,S.search)+'</div><div class="citem-p">'+hl(prev,S.search)+'</div></div><div class="citem-r"><div class="citem-d">'+fD(c.created_at)+'</div><div class="citem-w">'+wcFmt(c.wordCount)+'</div></div></div></div>'});
+h+='</div></div>';a.innerHTML=h}
+window.swT=function(id){S.tab=id;S.conv=null;S.search="";R()};
+window.opC=function(u){S.conv=u;S.view="chat";R()};
+
+// ---- CHAT ----
+function rC(a){
+const p=gp(),conv=(S.raw||[]).find(c=>c.uuid===S.conv);
+if(!conv){S.view="list";R();return}
+let totalWc=conv.wordCount;
+let h='<div class="view cv"><div class="cv-head" style="background:'+p.grad+'"><div class="cv-head-l"><button class="hbtn" onclick="backToList()">◂</button><div><div class="cv-pn">'+p.emoji+' '+p.name+'</div><div class="cv-cn">'+es(conv.name)+'</div></div></div><div style="display:flex;gap:6px"><button class="hbtn" onclick="exC((S.raw||[]).find(c=>c.uuid===\''+conv.uuid+'\'))">⤓</button></div></div><div class="msgs" id="cs">';
+let ld="";
+conv.messages.forEach((m,i)=>{
+const dk=dK(m.created_at);
+if(dk&&dk!==ld){ld=dk;h+='<div class="ddiv"><span>'+fD(m.created_at)+'</span></div>'}
+const isH=m.sender==="human",nm=isH?p.humanName:p.name,nc=isH?"#8A817A":p.dark,bb=isH?p.bubHu:p.bubAi;
+const fk=S.tab+":"+m.uuid,isFv=!!S.favs[fk];
+// Thinking + message combined
+const hasTh=!isH&&m.thinking;
+let thHtml="";
+if(hasTh){const tid="th_"+i;const isOpen=S.thinkOpen[tid];
+const tTitle=m.thinkTitle?m.thinkTitle.slice(0,50):"思考过程";
+thHtml='<button class="think-toggle" onclick="event.stopPropagation();toggleTh(\''+tid+'\')">💭 '+(isOpen?'收起 ▴':es(tTitle)+' ▾')+'</button>';
+if(isOpen)thHtml+='<div class="think-box">'+es(m.thinking)+'</div>'}
+h+='<div class="mw '+(isH?'hu':'ai')+' fi"><div class="mmt"><span class="sn" style="color:'+nc+'">'+nm+'</span>'+(m.created_at?'<span>'+fT(m.created_at)+'</span>':'')+'</div>'+thHtml+'<div class="mbub" style="background:'+bb+'">'+hl(m.text,S.search)+'</div><span class="mfav '+(isFv?'on':'')+'" onclick="doFv(\''+S.tab+'\',\''+conv.uuid+'\','+i+')">'+(isFv?'❤️':'🤍')+'</span></div>'});
+h+='<div id="ce"></div></div><div class="cv-bot"><span class="mc">'+conv.messages.length+' 条消息 · '+wcFmt(totalWc)+'</span><button class="scbtn" style="background:'+p.light+';color:'+p.dark+'" onclick="document.getElementById(\'ce\').scrollIntoView({behavior:\'smooth\'})">↓ 底部</button></div></div>';
+a.innerHTML=h;
+// Restore scroll position
+const cUuid=conv.uuid;
+const saved=S.scrollPos[cUuid];
+if(saved!==undefined&&saved>0){
+setTimeout(()=>window.scrollTo(0,saved),80);
+setTimeout(()=>window.scrollTo(0,saved),250);
+}else{window.scrollTo(0,0)}}
+
+window.toggleTh=function(tid){
+S.scrollPos[S.conv]=window.scrollY;
+S.thinkOpen[tid]=!S.thinkOpen[tid];R()};
+window.backToList=function(){
+S.scrollPos[S.conv]=window.scrollY;
+S.view="list";S.conv=null;R()};
+window.doFv=function(tid,cuid,idx){
+S.scrollPos[S.conv]=window.scrollY;
+const conv=(S.raw||[]).find(c=>c.uuid===cuid);if(!conv)return;
+const m=conv.messages[idx];if(!m)return;
+tFav(tid,cuid,conv.name,m.uuid,m.text,m.sender);R()};
+
+// ---- FAVS ----
+function rF(a){
+const fe=Object.entries(S.favs).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
+let h='<div class="view fv"><div class="fv-head"><div style="display:flex;align-items:center;gap:8px"><button class="hbtn" onclick="S.view=\'list\';R()">◂</button><span style="font-size:17px;font-weight:700">❤ 收藏的话语</span></div><span style="font-size:13px;opacity:.85">'+fe.length+' 条</span></div><div class="fv-list">';
+if(!fe.length){h+='<div class="es" style="padding-top:80px"><div class="ic">🤍</div><div style="font-size:14px">还没有收藏的话语</div><div style="font-size:12px;margin-top:8px;color:#C4BAB2">在对话中点击 🤍 即可收藏</div></div>'}
+else fe.forEach(([k,v])=>{
+const pr=P.find(p=>p.id===v.tabId)||P[0];
+const sn=v.msgSender==="human"?pr.humanName:pr.name;
+const txt=v.msgText||"";const il=txt.length>200;
+const sid=k.replace(/[^a-zA-Z0-9]/g,"_");
+h+='<div class="fcard fi" style="border-left-color:'+pr.primary+'"><div class="fcard-h"><div class="fcard-s"><span>'+pr.emoji+'</span><span style="color:'+pr.primary+';font-weight:600">'+pr.name+'</span><span style="color:#D5CEC8">·</span><span style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+es(v.convName||"")+'</span></div><span class="fcard-x" onclick="rmFv(\''+k.replace(/'/g,"\\'")+'\')">✕</span></div><div class="fcard-sn" style="color:'+(v.msgSender==="human"?"#8A817A":pr.dark)+'">'+sn+'</div><div class="fcard-t'+(il?' col':'')+'" id="ft-'+sid+'">'+es(txt)+'</div>'+(il?'<div class="fcard-e" style="color:'+pr.primary+'" onclick="exFv(this,\'ft-'+sid+'\')">展开全文 ▾</div>':'')+'</div>'});
+h+='</div></div>';a.innerHTML=h}
+window.rmFv=function(k){delete S.favs[k];sf();R()};
+window.exFv=function(btn,id){const el=document.getElementById(id);if(!el)return;if(el.classList.contains("col")){el.classList.remove("col");btn.textContent="收起 ▴"}else{el.classList.add("col");btn.textContent="展开全文 ▾"}};
+
+R();
+</script>
+</body>
+</html>
