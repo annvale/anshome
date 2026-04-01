@@ -252,14 +252,35 @@ a.innerHTML='<div class="view uv">'+
 window.hFile=function(input){
 const f=input.files?.[0];if(!f)return;
 const r=new FileReader();
-r.onload=e=>{const p=parseJ(e.target.result);if(p){S.raw=p;R()}else alert("无法解析")};
+r.onload=e=>{const p=parseJ(e.target.result);if(p){S.raw=p;autoAssign();R()}else alert("无法解析")};
 r.readAsText(f);input.value=""};
+
+function autoAssign(){
+if(!S.raw)return;
+S.assigns={};
+S.raw.forEach(c=>{
+const first=(c.name||"").trim().charAt(0).toUpperCase();
+if(first==="C")S.assigns[c.uuid]="j";
+else if(first==="J")S.assigns[c.uuid]="u";
+else S.assigns[c.uuid]="y";
+});
+sa()}
+
 window.goAssign=function(){S.view="assign";R()};
+window.reimport=function(){document.getElementById('uf2').click()};
+window.hFile2=function(input){
+const f=input.files?.[0];if(!f)return;
+const r=new FileReader();
+r.onload=e=>{const p=parseJ(e.target.result);if(p){S.raw=p;autoAssign();S.view="assign";R()}else alert("无法解析")};
+r.readAsText(f);input.value=""};
 
 // ---- ASSIGN ----
 function rA(a){
+const counts={};P.forEach(p=>counts[p.id]=0);
+S.raw.forEach(c=>{if(S.assigns[c.uuid])counts[S.assigns[c.uuid]]++});
 const assigned=Object.values(S.assigns).filter(v=>v).length;
-let h='<div class="view av"><div class="av-head"><div><div class="av-head-top"><div class="t">为每段对话选择归属</div></div><div class="s">点击右侧emoji分配 · 已分配 '+assigned+'/'+S.raw.length+'</div></div><button class="av-done" onclick="finishAssign()">完成 ✓</button></div><div class="av-list">';
+const countStr=P.map(p=>p.emoji+counts[p.id]).join('  ');
+let h='<div class="view av"><div class="av-head"><div><div class="av-head-top"><div class="t">对话分配</div></div><div class="s">已自动分配 · '+countStr+'</div></div><button class="av-done" onclick="finishAssign()">完成 ✓</button></div><div class="av-list">';
 S.raw.forEach(c=>{
 const cur=S.assigns[c.uuid]||"";
 h+='<div class="av-item fi"><div class="info"><div class="nm">'+es(c.name)+'</div><div class="dt">'+fD(c.created_at)+'</div><div class="wc">'+wcFmt(c.wordCount)+'</div></div><div class="av-tags">';
@@ -280,7 +301,7 @@ else alert("请至少为一段对话分配归属")};
 // ---- LIST ----
 function rL(a){
 const p=gp(),cs=gfc(),ld=P.filter(x=>S.raw?.some(c=>S.assigns[c.uuid]===x.id));
-let h='<div class="view lv"><div class="lv-head" style="background:'+p.grad+'"><div class="lv-top"><div class="lv-top-l"><button class="hbtn" onclick="S.view=\'assign\';R()">◂</button><span class="lv-t">📖 记忆回廊</span></div><div class="lv-top-r"><button class="hbtn" onclick="S.view=\'favs\';R()">♥</button><button class="hbtn" onclick="exC()">⤓</button></div></div><div class="tabs">';
+let h='<div class="view lv"><input type="file" id="uf2" accept=".json" style="display:none" onchange="hFile2(this)"><div class="lv-head" style="background:'+p.grad+'"><div class="lv-top"><div class="lv-top-l"><button class="hbtn" onclick="S.view=\'assign\';R()">◂</button><span class="lv-t">📖 记忆回廊</span></div><div class="lv-top-r"><button class="hbtn" onclick="reimport()" title="重新导入">↻</button><button class="hbtn" onclick="S.view=\'favs\';R()">♥</button><button class="hbtn" onclick="exC()">⤓</button></div></div><div class="tabs">';
 ld.forEach(t=>{h+='<button class="tab '+(S.tab===t.id?'on':'')+'" onclick="swT(\''+t.id+'\')">'+t.emoji+' '+t.name+'</button>'});
 h+='</div></div><div class="flt"><div class="sbar"><span style="color:#B0A8A0">🔍</span><input placeholder="搜索对话..." value="'+es(S.search)+'" oninput="S.search=this.value;R()">'+(S.search?'<span style="cursor:pointer;color:#B0A8A0;font-size:18px;padding:0 4px" onclick="S.search=\'\';R()">✕</span>':'')+'</div><div class="frow"><label><input type="checkbox" '+(S.searchMsg?'checked':'')+' onchange="S.searchMsg=this.checked;R()" style="accent-color:'+p.primary+'"> 搜索消息内容</label><div class="dins"><span style="font-size:13px;color:#B0A8A0">📅</span><input type="date" value="'+S.df+'" onchange="S.df=this.value;R()"><span style="font-size:11px;color:#B0A8A0">至</span><input type="date" value="'+S.dt+'" onchange="S.dt=this.value;R()"></div></div></div><div class="ccount">共 '+cs.length+' 段对话</div><div class="clist">';
 if(!cs.length){h+='<div class="es"><div class="ic">🔍</div><div>没有找到匹配的对话</div></div>'}
