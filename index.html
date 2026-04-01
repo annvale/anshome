@@ -14,7 +14,9 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
-body{font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;background:#FAF7F4;color:#3D3533;min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+html{height:100%;background:#EDE4DC}
+body{font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;background:#FAF7F4;color:#3D3533;min-height:100%;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+#app{min-height:100vh;min-height:100dvh}
 .serif{font-family:"Noto Serif SC","Songti SC",serif}
 
 /* ---- PALETTE ---- */
@@ -34,7 +36,7 @@ mark{background:#F9D97C;border-radius:3px;padding:0 2px}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#D5CEC8;border-radius:4px}
 
 /* ---- UPLOAD ---- */
-.uv{background:linear-gradient(170deg,#FAF7F4 0%,#F3EDE7 50%,#EDE4DC 100%);align-items:center;padding:calc(50px + var(--st)) 24px calc(40px + var(--sb));gap:10px}
+.uv{background:linear-gradient(170deg,#FAF7F4 0%,#F3EDE7 50%,#EDE4DC 100%);background-color:#EDE4DC;align-items:center;padding:calc(50px + var(--st)) 24px calc(40px + var(--sb));gap:10px;min-height:-webkit-fill-available}
 .uv-title{text-align:center;margin-bottom:8px}
 .uv-title .icon{font-size:36px;margin-bottom:6px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.08))}
 .uv-title h1{font-size:24px;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,#7EA8B8,#A08BB8,#C4977A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
@@ -122,10 +124,11 @@ mark{background:#F9D97C;border-radius:3px;padding:0 2px}
 .mw.ai .mbub{border-radius:18px 18px 18px 4px}
 .mw.hu .mmt{padding-right:4px}
 .mw.ai .mmt{padding-left:4px}
-.think-toggle{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#B0A8A0;cursor:pointer;padding:4px 10px;border-radius:8px;background:#F5F0EB;margin-bottom:6px;transition:all .2s;border:none;font-family:inherit;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.think-toggle{display:inline-flex;align-items:center;gap:4px;font-size:11px!important;color:#B0A8A0;cursor:pointer;padding:4px 10px;border-radius:8px;background:#F5F0EB;margin-bottom:6px;transition:all .2s;border:none;font-family:inherit;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.4}
+.think-toggle *{font-size:11px!important}
 .think-toggle:hover{background:#EDE4DC}
 .think-box{padding:10px 14px;font-size:13px;line-height:1.7;color:#A89E96;font-style:italic;background:#F5F0EB;border-radius:12px;margin-bottom:6px;border-left:3px solid #D5CEC8;max-height:300px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
-.mfav{position:absolute;bottom:-2px;cursor:pointer;font-size:13px;opacity:.35;transition:opacity .2s}
+.mfav{position:absolute;bottom:-2px;cursor:pointer;font-size:14px;opacity:.4;transition:opacity .2s}
 .mfav:hover,.mfav.on{opacity:1}
 .mw.hu .mfav{left:22px}
 .mw.ai .mfav{right:22px}
@@ -155,15 +158,15 @@ const P=[
 {id:"j",name:"江止",emoji:"🌊",
  grad:"linear-gradient(135deg,#7EA8B8,#9BBFCC)",
  light:"#EDF4F7",bubAi:"#DCEAF2",bubHu:"#F5EDE4",
- primary:"#7EA8B8",dark:"#5D8A9C",humanName:"安安"},
+ primary:"#7EA8B8",dark:"#5D8A9C",heart:"🧡",humanName:"安安"},
 {id:"y",name:"夜川",emoji:"🕊️",
  grad:"linear-gradient(135deg,#A08BB8,#B9A6D0)",
  light:"#F0ECF6",bubAi:"#E2D8EE",bubHu:"#F5EDE4",
- primary:"#A08BB8",dark:"#7E6C9A",humanName:"安安"},
+ primary:"#A08BB8",dark:"#7E6C9A",heart:"💗",humanName:"安安"},
 {id:"u",name:"余寂",emoji:"🦋",
  grad:"linear-gradient(135deg,#C4977A,#D4AE96)",
  light:"#F8F0EA",bubAi:"#ECDDD0",bubHu:"#F5EDE4",
- primary:"#C4977A",dark:"#A67B5E",humanName:"安安"}
+ primary:"#C4977A",dark:"#A67B5E",heart:"💙",humanName:"安安"}
 ];
 
 let S={raw:null,assigns:{},tab:null,conv:null,search:"",searchMsg:false,df:"",dt:"",favs:{},view:"upload",thinkOpen:{},scrollPos:{}};
@@ -198,7 +201,32 @@ function fT(s){if(!s)return"";const d=new Date(s);return isNaN(d)?"":String(d.ge
 function dK(s){if(!s)return"";const d=new Date(s);return isNaN(d)?"":d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 function wcFmt(n){return n>=10000?(n/10000).toFixed(1)+"万字":n+"字"}
 function es(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
-function hl(t,q){if(!q||!t)return es(t);const e=q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");return es(t).replace(new RegExp("("+e+")","gi"),"<mark>$1</mark>")}
+function md(s){if(!s)return"";let t=es(s);
+// code blocks ```
+t=t.replace(/```(\w*)\n?([\s\S]*?)```/g,function(_,lang,code){return'<pre style="background:#F0EBE6;border-radius:8px;padding:10px 12px;font-size:12px;overflow-x:auto;margin:6px 0;font-family:Menlo,Monaco,monospace;line-height:1.6"><code>'+code.trim()+'</code></pre>'});
+// inline code `
+t=t.replace(/`([^`\n]+)`/g,'<code style="background:#F0EBE6;padding:1px 5px;border-radius:4px;font-size:12px;font-family:Menlo,Monaco,monospace">$1</code>');
+// bold **text** or __text__
+t=t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+t=t.replace(/__(.+?)__/g,'<strong>$1</strong>');
+// italic *text* or _text_ (not inside words for _)
+t=t.replace(/(?<!\w)\*([^*\n]+?)\*(?!\w)/g,'<em>$1</em>');
+t=t.replace(/(?<!\w)_([^_\n]+?)_(?!\w)/g,'<em>$1</em>');
+// strikethrough ~~text~~
+t=t.replace(/~~(.+?)~~/g,'<del style="color:#B0A8A0">$1</del>');
+// headers at line start
+t=t.replace(/^### (.+)$/gm,'<div style="font-size:15px;font-weight:700;margin:10px 0 4px">$1</div>');
+t=t.replace(/^## (.+)$/gm,'<div style="font-size:16px;font-weight:700;margin:12px 0 4px">$1</div>');
+t=t.replace(/^# (.+)$/gm,'<div style="font-size:18px;font-weight:700;margin:14px 0 6px">$1</div>');
+// links [text](url)
+t=t.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" style="color:#7EA8B8;text-decoration:underline">$1</a>');
+// bullet lists at line start
+t=t.replace(/^[-*] (.+)$/gm,'<div style="padding-left:16px;text-indent:-10px">• $1</div>');
+// numbered lists
+t=t.replace(/^\d+\. (.+)$/gm,function(m,content){return'<div style="padding-left:16px">'+m.match(/^\d+/)[0]+'. '+content+'</div>'});
+return t}
+function hl(t,q){if(!q||!t)return md(t);const rendered=md(t);const e=q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");return rendered.replace(new RegExp("("+e+")","gi"),"<mark>$1</mark>")}
+function hlPlain(t,q){if(!q||!t)return es(t);const e=q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");return es(t).replace(new RegExp("("+e+")","gi"),"<mark>$1</mark>")}
 function gp(){return P.find(p=>p.id===S.tab)||P[0]}
 function gc(){if(!S.raw)return[];return S.raw.filter(c=>S.assigns[c.uuid]===S.tab)}
 function gfc(){let r=[...gc()];if(S.df){const f=new Date(S.df);r=r.filter(c=>new Date(c.created_at)>=f)}if(S.dt){const t=new Date(S.dt);t.setHours(23,59,59);r=r.filter(c=>new Date(c.created_at)<=t)}if(S.search){const q=S.search.toLowerCase();r=r.filter(c=>{if(c.name?.toLowerCase().includes(q))return true;if(S.searchMsg)return c.messages?.some(m=>m.text?.toLowerCase().includes(q));return false})}return r}
@@ -250,13 +278,13 @@ else alert("请至少为一段对话分配归属")};
 // ---- LIST ----
 function rL(a){
 const p=gp(),cs=gfc(),ld=P.filter(x=>S.raw?.some(c=>S.assigns[c.uuid]===x.id));
-let h='<div class="view lv"><div class="lv-head" style="background:'+p.grad+'"><div class="lv-top"><div class="lv-top-l"><button class="hbtn" onclick="S.view=\'assign\';R()">◂</button><span class="lv-t">📖 记忆回廊</span></div><div class="lv-top-r"><button class="hbtn" onclick="S.view=\'favs\';R()">❤</button><button class="hbtn" onclick="exC()">⤓</button></div></div><div class="tabs">';
+let h='<div class="view lv"><div class="lv-head" style="background:'+p.grad+'"><div class="lv-top"><div class="lv-top-l"><button class="hbtn" onclick="S.view=\'assign\';R()">◂</button><span class="lv-t">📖 记忆回廊</span></div><div class="lv-top-r"><button class="hbtn" onclick="S.view=\'favs\';R()">♥</button><button class="hbtn" onclick="exC()">⤓</button></div></div><div class="tabs">';
 ld.forEach(t=>{h+='<button class="tab '+(S.tab===t.id?'on':'')+'" onclick="swT(\''+t.id+'\')">'+t.emoji+' '+t.name+'</button>'});
 h+='</div></div><div class="flt"><div class="sbar"><span style="color:#B0A8A0">🔍</span><input placeholder="搜索对话..." value="'+es(S.search)+'" oninput="S.search=this.value;R()">'+(S.search?'<span style="cursor:pointer;color:#B0A8A0;font-size:18px;padding:0 4px" onclick="S.search=\'\';R()">✕</span>':'')+'</div><div class="frow"><label><input type="checkbox" '+(S.searchMsg?'checked':'')+' onchange="S.searchMsg=this.checked;R()" style="accent-color:'+p.primary+'"> 搜索消息内容</label><div class="dins"><span style="font-size:13px;color:#B0A8A0">📅</span><input type="date" value="'+S.df+'" onchange="S.df=this.value;R()"><span style="font-size:11px;color:#B0A8A0">至</span><input type="date" value="'+S.dt+'" onchange="S.dt=this.value;R()"></div></div></div><div class="ccount">共 '+cs.length+' 段对话</div><div class="clist">';
 if(!cs.length){h+='<div class="es"><div class="ic">🔍</div><div>没有找到匹配的对话</div></div>'}
 else cs.forEach(c=>{
 const prev=c.messages?.[c.messages.length-1]?.text?.slice(0,50)||"";
-h+='<div class="citem fi" onclick="opC(\''+c.uuid+'\')"><div class="citem-in"><div class="citem-l"><div class="citem-t">'+hl(c.name,S.search)+'</div><div class="citem-p">'+hl(prev,S.search)+'</div></div><div class="citem-r"><div class="citem-d">'+fD(c.created_at)+'</div><div class="citem-w">'+wcFmt(c.wordCount)+'</div></div></div></div>'});
+h+='<div class="citem fi" onclick="opC(\''+c.uuid+'\')"><div class="citem-in"><div class="citem-l"><div class="citem-t">'+hlPlain(c.name,S.search)+'</div><div class="citem-p">'+hlPlain(prev,S.search)+'</div></div><div class="citem-r"><div class="citem-d">'+fD(c.created_at)+'</div><div class="citem-w">'+wcFmt(c.wordCount)+'</div></div></div></div>'});
 h+='</div></div>';a.innerHTML=h}
 window.swT=function(id){S.tab=id;S.conv=null;S.search="";R()};
 window.opC=function(u){S.conv=u;S.view="chat";R()};
@@ -280,8 +308,8 @@ if(hasTh){const tid="th_"+i;const isOpen=S.thinkOpen[tid];
 const tTitle=m.thinkTitle?m.thinkTitle.slice(0,50):"思考过程";
 thHtml='<button class="think-toggle" onclick="event.stopPropagation();toggleTh(\''+tid+'\')">💭 '+(isOpen?'收起 ▴':es(tTitle)+' ▾')+'</button>';
 if(isOpen)thHtml+='<div class="think-box">'+es(m.thinking)+'</div>'}
-h+='<div class="mw '+(isH?'hu':'ai')+' fi"><div class="mmt"><span class="sn" style="color:'+nc+'">'+nm+'</span>'+(m.created_at?'<span>'+fT(m.created_at)+'</span>':'')+'</div>'+thHtml+'<div class="mbub" style="background:'+bb+'">'+hl(m.text,S.search)+'</div><span class="mfav '+(isFv?'on':'')+'" onclick="doFv(\''+S.tab+'\',\''+conv.uuid+'\','+i+')">'+(isFv?'❤️':'🤍')+'</span></div>'});
-h+='<div id="ce"></div></div><div class="cv-bot"><span class="mc">'+conv.messages.length+' 条消息 · '+wcFmt(totalWc)+'</span><button class="scbtn" style="background:'+p.light+';color:'+p.dark+'" onclick="document.getElementById(\'ce\').scrollIntoView({behavior:\'smooth\'})">↓ 底部</button></div></div>';
+h+='<div class="mw '+(isH?'hu':'ai')+' fi"><div class="mmt"><span class="sn" style="color:'+nc+'">'+nm+'</span>'+(m.created_at?'<span>'+fT(m.created_at)+'</span>':'')+'</div>'+thHtml+'<div class="mbub" style="background:'+bb+'">'+hl(m.text,S.search)+'</div><span class="mfav '+(isFv?'on':'')+'" onclick="doFv(\''+S.tab+'\',\''+conv.uuid+'\','+i+')">'+(isFv?p.heart:'🤍')+'</span></div>'});
+h+='<div id="ce"></div></div><div class="cv-bot"><span class="mc">'+conv.messages.length+' 条消息 · '+wcFmt(totalWc)+'</span><div style="display:flex;gap:6px"><button class="scbtn" style="background:'+p.light+';color:'+p.dark+'" onclick="window.scrollTo({top:0,behavior:\'smooth\'})">↑ 顶部</button><button class="scbtn" style="background:'+p.light+';color:'+p.dark+'" onclick="document.getElementById(\'ce\').scrollIntoView({behavior:\'smooth\'})">↓ 底部</button></div></div></div>';
 a.innerHTML=h;
 // Restore scroll position
 const cUuid=conv.uuid;
@@ -306,7 +334,7 @@ tFav(tid,cuid,conv.name,m.uuid,m.text,m.sender);R()};
 // ---- FAVS ----
 function rF(a){
 const fe=Object.entries(S.favs).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
-let h='<div class="view fv"><div class="fv-head"><div style="display:flex;align-items:center;gap:8px"><button class="hbtn" onclick="S.view=\'list\';R()">◂</button><span style="font-size:17px;font-weight:700">❤ 收藏的话语</span></div><span style="font-size:13px;opacity:.85">'+fe.length+' 条</span></div><div class="fv-list">';
+let h='<div class="view fv"><div class="fv-head"><div style="display:flex;align-items:center;gap:8px"><button class="hbtn" onclick="S.view=\'list\';R()">◂</button><span style="font-size:17px;font-weight:700">♥ 收藏的话语</span></div><span style="font-size:13px;opacity:.85">'+fe.length+' 条</span></div><div class="fv-list">';
 if(!fe.length){h+='<div class="es" style="padding-top:80px"><div class="ic">🤍</div><div style="font-size:14px">还没有收藏的话语</div><div style="font-size:12px;margin-top:8px;color:#C4BAB2">在对话中点击 🤍 即可收藏</div></div>'}
 else fe.forEach(([k,v])=>{
 const pr=P.find(p=>p.id===v.tabId)||P[0];
